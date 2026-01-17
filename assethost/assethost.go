@@ -1,7 +1,6 @@
 package assethost
 
 import (
-	"fmt"
 	"net/http"
 	"resonite-file-provider/authentication"
 	"resonite-file-provider/config"
