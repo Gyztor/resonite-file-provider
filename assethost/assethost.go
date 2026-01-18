@@ -31,16 +31,17 @@ func handleRequest(next http.Handler) http.Handler {
 			http.Error(w, "Bad filename", http.StatusBadRequest)
 			return
 		}
-		var isPublic bool;
-		database.Db.QueryRow(`
-			SELECT isPublic from assets WHERE hash = ?
-			`,
-			strings.TrimSuffix(r.URL.Path, ".brson")).Scan(&isPublic)
-		if isPublic {
+
+		if !strings.HasSuffix(r.URL.Path, ".brson") {
 			next.ServeHTTP(w, r)
 			return
 		}
-		if !strings.HasSuffix(r.URL.Path, ".brson") {
+		var isPublic []byte
+		database.Db.QueryRow(`
+			SELECT i.isPublic from Items i JOIN Assets a on a.hash = i.url WHERE a.hash = ?
+			`,
+			strings.TrimSuffix(r.URL.Path, ".brson")).Scan(&isPublic)
+		if len(isPublic) > 0 && isPublic[0] == 1 {
 			next.ServeHTTP(w, r)
 			return
 		}
