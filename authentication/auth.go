@@ -261,12 +261,12 @@ func AuthCheck(w http.ResponseWriter, r *http.Request) *Claims {
 		return nil
 	}
 	fmt.Println("[AUTH] Auth successful for user ID:", claims.UID, "Username:", claims.Username)
-
-	now := time.Now().UTC()
-	expires := now.Add(24 * time.Hour)
-	if _, err := database.Db.Exec("UPDATE active_sessions SET last_seen = ?, expires_at = ? WHERE token = ?", now, expires, auth); err != nil {
-		fmt.Println("[AUTH] Failed to refresh active session:", err)
-	}
+	// TODO: Add correct way to handle JWT Token expirey.
+	//now := time.Now().UTC()
+	//expires := now.Add(24 * time.Hour)
+	//if _, err := database.Db.Exec("UPDATE active_sessions SET last_seen = ?, expires_at = ? WHERE token = ?", now, expires, auth); err != nil {
+	//	fmt.Println("[AUTH] Failed to refresh active session:", err)
+	//}
 
 	return claims
 }
